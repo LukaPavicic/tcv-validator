@@ -1,0 +1,17 @@
+<%= render "layouts/navigation" %>
+
+<div class="flex flex-col items-center">
+  <div class="container p-10">
+    <h1 class="text-2xl font-bold border-b-2 border-primary">CV za: <%= @job_application.applicant_full_name %> - <%= @job_application.position.name %></h1>
+
+    <%= link_to job_application_path(@job_application), class: "flex items-center gap-2 text-blue-700 my-4" do %>
+      <svg class="w-6 h-6 text-blue-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4"/>
+      </svg>
+
+      Nazad
+    <% end %>
+
+    <%= Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true).render(@job_application.cv_text).html_safe %>
+  </div>
+</div>

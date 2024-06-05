@@ -1,0 +1,72 @@
+<%= render "layouts/navigation" %>
+
+<div class="flex flex-col items-center">
+  <div class="container p-10">
+    <div class="grid grid-cols-12 gap-4">
+      <div class="col-span-6 bg-white border border-gray-100 p-5 rounded-md">
+        <div class="flex items-center justify-between">
+          <h1 class="text-xl font-bold">Obrađene prijave</h1>
+          <%= link_to new_job_application_path, class: "px-3 py-2 text-sm font-medium text-center inline-flex items-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300" do %>
+            <svg class="w-[18px] h-[18px] text-gray-800 dark:text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M9 7V2.221a2 2 0 0 0-.5.365L4.586 6.5a2 2 0 0 0-.365.5H9Zm2 0V2h7a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5h7.586l-.293.293a1 1 0 0 0 1.414 1.414l2-2a1 1 0 0 0 0-1.414l-2-2a1 1 0 0 0-1.414 1.414l.293.293H4V9h5a2 2 0 0 0 2-2Z" clip-rule="evenodd"/>
+            </svg>
+            Nova prijava
+          <% end %>
+        </div>
+        <div>
+          <% JobApplication.all.each do |app| %>
+            <div class="border border-gray-100 p-4 rounded-md flex items-center justify-between gap-2 mt-2">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <p class="font-medium"><%= app.applicant_full_name %></p>
+                </div>
+                <p class="text-sm text-gray-600">Kandidatom upravlja: <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded"><%= app.user.email %></span></p>
+                <p class="text-sm text-gray-600">Pozicija: <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded"><%= app.position.name %></span></p>
+              </div>
+              <div class="flex gap-2">
+                <p class="hidden bg-red-100 bg-orange-100 bg-red-100 bg-green-100"></p>
+                <div>
+                  <span class="bg-<%= status_color(app.status) %>-100 text-<%= status_color(app.status) %>-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded"><%= status_name(app.status) %></span>
+                </div>
+                <%= link_to "Pregled", job_application_path(app), class: "px-2 py-1.5 text-xs font-medium text-center inline-flex items-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-span-6 bg-white border border-gray-100 p-5 rounded-md">
+        <div class="flex items-center justify-between">
+          <h1 class="text-xl font-bold">Pozicije</h1>
+          <button data-modal-target="create-position-modal" data-modal-toggle="create-position-modal" type="button" class="px-3 py-2 text-sm font-medium text-center inline-flex items-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+            <svg class="w-[18px] h-[18px] text-gray-800 dark:text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm10 5a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-8-5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm1.942 4a3 3 0 0 0-2.847 2.051l-.044.133-.004.012c-.042.126-.055.167-.042.195.006.013.02.023.038.039.032.025.08.064.146.155A1 1 0 0 0 6 17h6a1 1 0 0 0 .811-.415.713.713 0 0 1 .146-.155c.019-.016.031-.026.038-.04.014-.027 0-.068-.042-.194l-.004-.012-.044-.133A3 3 0 0 0 10.059 14H7.942Z" clip-rule="evenodd"/>
+            </svg>
+            Nova pozicija
+          </button>
+        </div>
+        <div>
+          <% Position.all.each do |pos| %>
+            <div class="border border-gray-100 p-4 rounded-md flex items-center justify-between gap-2 mt-2">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <p class="font-medium"><%= pos.name %></p>
+                </div>
+                <p class="text-sm text-gray-600">Pozicijom upravlja: <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded"><%= pos.user.email %></span></p>
+              </div>
+              <div class="flex gap-2">
+                <% if pos.position_criteriums.blank? %>
+                  <div>
+                    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Nema kriterije</span>
+                  </div>
+                <% end %>
+                <%= link_to "Upravljaj kriterijima", new_position_position_criterium_path(pos), class: "px-2 py-1.5 text-xs font-medium text-center inline-flex items-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render "pages/modals/new_position" %>
+</div>

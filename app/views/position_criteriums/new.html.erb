@@ -1,0 +1,79 @@
+<%= render "layouts/navigation" %>
+
+<div class="flex flex-col items-center">
+  <div class="container p-10">
+    <h1 class="text-2xl font-bold">Upravljanje kriterjima za <span class="border-b-2 border-primary"><%= @position.name %></span></h1>
+
+    <% if @position.position_criteriums.blank? %>
+      <div id="alert-border-1" class="mt-4 flex items-center p-4 mb-4 text-blue-800 border-t-4 border-blue-300 bg-blue-50" role="alert">
+        <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+        </svg>
+        <div class="ms-3 text-sm font-medium">
+          Ova pozicija nema niti jedan kriterij.
+        </div>
+      </div>
+    <% end %>
+
+    <%= form_with url: position_position_criteriums_path(@position), method: :post do |form| %>
+      <div class="flex gap-2 items-center mt-6">
+        <div>
+          <%#= form.label :criterium_value, "Kriterij", class: "block mb-2 text-sm font-medium text-gray-900" %>
+          <%= form.text_field :criteria_value, class: "min-w-[30rem] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3", placeholder: "Kriterij" %>
+        </div>
+        <div>
+          <div class="flex items-center px-4 border border-gray-200 rounded">
+            <%= form.check_box :required, checked: true, class: "w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2" %>
+            <%= form.label :required, "Obavezan kriterij", class: "w-full py-3 ms-2 text-sm font-medium text-gray-900" %>
+          </div>
+        </div>
+        <div>
+          <button type="submit" class="text-white bg-primary hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center">Dodaj kriterij</button>
+        </div>
+      </div>
+    <% end %>
+
+    <p class="text-gray-600 my-4">
+      Ovi kriteriji će se koristiti kao ključne riječi prilikom obrade priloženih dokumenata kako bi se potvrdilo jesu li svi kriteriji
+      zadovoljeni.
+    </p>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-6">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              Kriterij
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Obvezan
+            </th>
+            <th scope="col" class="px-6 py-3">
+              <span class="sr-only">Edit</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @position.position_criteriums.each do |crit| %>
+            <tr class="bg-white border-b">
+              <th scope="row" class="px-6 max-w-2xl py-4 font-medium text-gray-900 max-w-[25rem] break-all">
+                <%= crit.criteria_value %>
+              </th>
+              <td class="px-6 py-4">
+                <% if crit.required %>
+                  <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">DA</span>
+                <% else %>
+                  <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">NE</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <%= link_to "Ukloni", position_position_criterium_path(@position, crit), class: "font-medium text-red-600 hover:underline", data: { turbo_method: :delete } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
