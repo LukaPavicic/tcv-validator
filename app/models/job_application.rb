@@ -11,16 +11,20 @@ class JobApplication < ApplicationRecord
   enum status: { in_process: 0, rejected: 1, accepted: 2, on_hold: 3 }
 
   def all_required_criteriums_satisfied?
-    position_criteriums.required.each do |crit|
-      return false unless crit.job_application_requirements.first.satisfied
+    job_application_requirements.each do |req|
+      next unless req.position_criterium.required
+
+      return false unless req.satisfied
     end
 
     true
   end
 
   def all_bonus_criteriums_satisfied?
-    position_criteriums.not_required.each do |crit|
-      return false unless crit.job_application_requirements.first.satisfied
+    job_application_requirements.each do |req|
+      next if req.position_criterium.required
+
+      return false unless req.satisfied
     end
 
     true

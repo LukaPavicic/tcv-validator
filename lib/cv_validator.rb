@@ -29,7 +29,7 @@ class CvValidator
      #{requirements_string}\n
      CV:\n
      #{job_application.cv_text}\n
-     Na kraju mi vrati isključivo identifikatore od kriterija koje je zadovoljio odvojene zarezom i ništa više.
+     Na kraju mi vrati isključivo identifikatore od kriterija koje je zadovoljio temeljem unesenog CV-a, odvojene zarezom i ništa više.
     "
   end
 
@@ -45,7 +45,7 @@ class CvValidator
 
   def client
     @client ||= OpenAI::Client.new(
-      access_token: "sk-proj-b9NBMNJ3PHoOLe0YiNBrT3BlbkFJBGipoyMwgKnMVp1ff7Up",
+      access_token: "",
       log_errors: true
     )
   end
